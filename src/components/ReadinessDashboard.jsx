@@ -1,52 +1,65 @@
 import React from 'react';
 import { BarChart3, Sparkles } from 'lucide-react';
 import { signInWithGoogle } from '../firebase/config';
+import { motion } from 'framer-motion';
 
 const ReadinessDashboard = ({ user, loading }) => {
-  const readiness = 72;
+  const readiness = 78;
   const progress = [
-    { label: 'Mentorship Sessions', value: 60 },
-    { label: 'Leadership Modules', value: 40 },
-    { label: 'Job Rotation', value: 25 },
+    { label: 'Mentorship Sessions', value: 68 },
+    { label: 'Leadership Modules', value: 52 },
+    { label: 'Job Rotation', value: 35 },
   ];
 
   return (
-    <section id="employee" className="bg-[#F9F4F5] rounded-2xl border border-black/5 p-6 md:p-8 shadow">
-      <div className="flex items-center justify-between">
+    <section id="employee" className="relative rounded-3xl border border-white/40 bg-white/60 backdrop-blur-xl p-6 md:p-8 shadow-[0_12px_40px_rgba(80,47,76,0.18)] overflow-hidden">
+      <div className="pointer-events-none absolute -top-24 -right-20 h-64 w-64 rounded-full bg-[#C88BDB]/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-28 -left-20 h-80 w-80 rounded-full bg-[#70587C]/30 blur-3xl" />
+
+      <div className="relative flex items-center justify-between">
         <h2 className="text-xl md:text-2xl font-semibold text-black flex items-center gap-2">
           <BarChart3 className="w-5 h-5 text-[#70587C]" /> Employee Dashboard
         </h2>
-        <span className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full bg-[#70587C]/10 text-[#502F4C] border border-[#70587C]/30">
+        <span className="inline-flex items-center gap-2 text-xs font-medium px-3 py-1 rounded-full bg-[#70587C]/15 text-[#502F4C] border border-[#70587C]/30">
           <Sparkles className="w-4 h-4" /> AI Recommendations Enabled
         </span>
       </div>
 
       {!user && (
-        <div className="mt-6 bg-white rounded-xl border border-black/5 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="relative mt-6 bg-white rounded-2xl border border-black/5 p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm"
+        >
           <div>
             <div className="text-lg font-semibold text-black">Sign in to view your personalized LRI and IDP</div>
             <div className="text-sm text-black/70">Use your corporate Google account to continue.</div>
           </div>
           <button
             onClick={signInWithGoogle}
-            className="px-4 py-2 rounded-lg bg-[#C88BDB] text-black font-medium hover:opacity-90 transition"
+            className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#C88BDB] to-[#9C7FB7] text-black font-medium hover:opacity-95 transition shadow"
             disabled={loading}
           >
             {loading ? 'Loading…' : 'Sign in with Google'}
           </button>
-        </div>
+        </motion.div>
       )}
 
       {user && (
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1">
+        <div className="relative mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="lg:col-span-1">
             <Gauge value={readiness} />
-          </div>
+          </motion.div>
           <div className="lg:col-span-2">
-            <RecommendationsPanel />
+            <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.05 }}>
+              <RecommendationsPanel />
+            </motion.div>
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              {progress.map((p) => (
-                <ProgressTile key={p.label} label={p.label} value={p.value} />
+              {progress.map((p, i) => (
+                <motion.div key={p.label} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45, delay: 0.05 * (i + 1) }}>
+                  <ProgressTile label={p.label} value={p.value} />
+                </motion.div>
               ))}
             </div>
           </div>
@@ -57,22 +70,28 @@ const ReadinessDashboard = ({ user, loading }) => {
 };
 
 const Gauge = ({ value = 0 }) => {
-  const size = 220;
+  const size = 230;
   const stroke = 16;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (value / 100) * circumference;
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-black/5 shadow-sm flex flex-col items-center justify-center">
+    <div className="bg-white/90 rounded-2xl p-6 border border-black/5 shadow-sm flex flex-col items-center justify-center">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size}>
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#70587C" />
+              <stop offset="100%" stopColor="#C88BDB" />
+            </linearGradient>
+          </defs>
           <circle cx={size / 2} cy={size / 2} r={radius} stroke="#E9D7F6" strokeWidth={stroke} fill="none" />
           <circle
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="#C88BDB"
+            stroke="url(#g1)"
             strokeWidth={stroke}
             fill="none"
             strokeLinecap="round"
@@ -87,7 +106,7 @@ const Gauge = ({ value = 0 }) => {
           </div>
         </div>
       </div>
-      <div className="mt-4 text-xs text-black/70">Updated as you complete trainings and mentorships.</div>
+      <div className="mt-4 text-xs text-black/70">Updates as you complete trainings and mentorships.</div>
     </div>
   );
 };
@@ -107,7 +126,7 @@ const RecommendationsPanel = () => {
       </div>
       <ul className="space-y-3">
         {items.map((it) => (
-          <li key={it.title} className="p-4 rounded-xl border border-black/5 bg-[#F9F4F5]">
+          <li key={it.title} className="p-4 rounded-xl border border-black/5 bg-[#F9F4F5] hover:bg-white transition">
             <div className="flex items-center justify-between">
               <div>
                 <div className="font-medium text-black">{it.title}</div>
@@ -124,7 +143,7 @@ const RecommendationsPanel = () => {
 
 const ProgressTile = ({ label, value }) => {
   return (
-    <div className="bg-white rounded-xl p-4 border border-black/5">
+    <div className="bg-white rounded-xl p-4 border border-black/5 shadow-sm hover:shadow-md transition">
       <div className="text-sm font-medium text-black mb-2">{label}</div>
       <div className="w-full h-2 rounded-full bg-black/10 overflow-hidden">
         <div className="h-2 rounded-full bg-gradient-to-r from-[#70587C] to-[#C88BDB]" style={{ width: `${value}%` }} />

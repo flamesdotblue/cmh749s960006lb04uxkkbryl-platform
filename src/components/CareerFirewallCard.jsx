@@ -1,18 +1,18 @@
 import React from 'react';
-import { Shield, Lock } from 'lucide-react';
+import { Shield, Lock, FileSearch } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const CareerFirewallCard = () => {
   const trustScore = 98;
 
   return (
-    <section id="admin" className="bg-white rounded-2xl border border-black/5 p-6 shadow relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-[#C88BDB]/30 blur-3xl" />
-        <div className="absolute -bottom-24 -left-20 w-72 h-72 rounded-full bg-[#70587C]/30 blur-3xl" />
-      </div>
+    <section id="admin" className="relative rounded-3xl border border-white/40 bg-white/60 backdrop-blur-xl p-6 shadow-[0_12px_40px_rgba(80,47,76,0.18)] overflow-hidden">
+      <div className="pointer-events-none absolute -top-24 -right-20 h-64 w-64 rounded-full bg-[#C88BDB]/25 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-28 -left-24 h-72 w-72 rounded-full bg-[#70587C]/25 blur-3xl" />
+
       <div className="relative">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-[#C88BDB]/20 border border-[#C88BDB]/40">
+          <div className="p-2 rounded-xl bg-[#C88BDB]/25 border border-[#C88BDB]/40">
             <Shield className="w-6 h-6 text-[#502F4C]" />
           </div>
           <div>
@@ -21,9 +21,17 @@ const CareerFirewallCard = () => {
           </div>
         </div>
 
-        <div className="mt-5 p-4 rounded-xl bg-[#F9F4F5] border border-black/5">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-5 p-5 rounded-2xl bg-white border border-black/5 shadow-sm"
+        >
           <div className="flex items-center justify-between">
-            <div className="text-3xl font-semibold text-[#502F4C]">{trustScore}%</div>
+            <div className="text-4xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-[#502F4C] to-[#9C7FB7]">
+              {trustScore}%
+            </div>
             <span className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">
               <Lock className="w-4 h-4" /> Secure
             </span>
@@ -35,13 +43,17 @@ const CareerFirewallCard = () => {
             <li>• Fairness check passed on anonymized attributes</li>
             <li>• Decision record hashed and stored immutably</li>
           </ul>
-        </div>
 
-        <div className="mt-4 grid grid-cols-3 gap-3">
-          <Badge label="Transparent" />
-          <Badge label="Unbiased" />
-          <Badge label="Immutable" />
-        </div>
+          <div className="mt-4 flex items-center gap-2">
+            <Badge label="Transparent" />
+            <Badge label="Unbiased" />
+            <Badge label="Immutable" />
+          </div>
+
+          <button className="mt-5 w-full text-sm px-3 py-2 rounded-lg bg-gradient-to-r from-[#70587C] to-[#C88BDB] text-white font-medium hover:opacity-95 transition inline-flex items-center justify-center gap-2">
+            <FileSearch className="w-4 h-4" /> View Firewall Report
+          </button>
+        </motion.div>
       </div>
     </section>
   );
