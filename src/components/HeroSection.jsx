@@ -1,10 +1,10 @@
 import React from 'react';
 import Spline from '@splinetool/react-spline';
-import { Shield, User, Building2 } from 'lucide-react';
+import { Shield, User as UserIcon, Building2 } from 'lucide-react';
 
 const HeroSection = () => {
   return (
-    <section className="relative h-[70vh] w-full">
+    <section className="relative h-[60vh] md:h-[70vh] w-full">
       <div className="absolute inset-0">
         <Spline
           scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"
@@ -12,7 +12,7 @@ const HeroSection = () => {
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/50 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-transparent pointer-events-none" />
 
       <div className="relative z-10 h-full flex items-center">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
@@ -31,12 +31,12 @@ const HeroSection = () => {
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a href="#employee" className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#C88BDB] text-black font-medium shadow hover:shadow-md transition">
-                    <User className="w-4 h-4" />
-                    Login as Employee
+                    <UserIcon className="w-4 h-4" />
+                    Employee Dashboard
                   </a>
                   <a href="#admin" className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#70587C] text-white font-medium shadow hover:shadow-md transition">
                     <Building2 className="w-4 h-4" />
-                    Login as HR
+                    HR & Admin
                   </a>
                 </div>
               </div>

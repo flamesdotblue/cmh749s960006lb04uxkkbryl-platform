@@ -1,8 +1,9 @@
 import React from 'react';
 import { BarChart3, Sparkles } from 'lucide-react';
+import { signInWithGoogle } from '../firebase/config';
 
-const ReadinessDashboard = () => {
-  const readiness = 72; // demo value
+const ReadinessDashboard = ({ user, loading }) => {
+  const readiness = 72;
   const progress = [
     { label: 'Mentorship Sessions', value: 60 },
     { label: 'Leadership Modules', value: 40 },
@@ -20,19 +21,37 @@ const ReadinessDashboard = () => {
         </span>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <Gauge value={readiness} />
+      {!user && (
+        <div className="mt-6 bg-white rounded-xl border border-black/5 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <div className="text-lg font-semibold text-black">Sign in to view your personalized LRI and IDP</div>
+            <div className="text-sm text-black/70">Use your corporate Google account to continue.</div>
+          </div>
+          <button
+            onClick={signInWithGoogle}
+            className="px-4 py-2 rounded-lg bg-[#C88BDB] text-black font-medium hover:opacity-90 transition"
+            disabled={loading}
+          >
+            {loading ? 'Loading…' : 'Sign in with Google'}
+          </button>
         </div>
-        <div className="lg:col-span-2">
-          <RecommendationsPanel />
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {progress.map((p) => (
-              <ProgressTile key={p.label} label={p.label} value={p.value} />
-            ))}
+      )}
+
+      {user && (
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <Gauge value={readiness} />
+          </div>
+          <div className="lg:col-span-2">
+            <RecommendationsPanel />
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {progress.map((p) => (
+                <ProgressTile key={p.label} label={p.label} value={p.value} />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };
@@ -48,14 +67,7 @@ const Gauge = ({ value = 0 }) => {
     <div className="bg-white rounded-2xl p-6 border border-black/5 shadow-sm flex flex-col items-center justify-center">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size}>
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={radius}
-            stroke="#E9D7F6"
-            strokeWidth={stroke}
-            fill="none"
-          />
+          <circle cx={size / 2} cy={size / 2} r={radius} stroke="#E9D7F6" strokeWidth={stroke} fill="none" />
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -75,31 +87,16 @@ const Gauge = ({ value = 0 }) => {
           </div>
         </div>
       </div>
-      <div className="mt-4 text-xs text-black/70">Updated in real-time as you complete trainings and mentorships.</div>
+      <div className="mt-4 text-xs text-black/70">Updated as you complete trainings and mentorships.</div>
     </div>
   );
 };
 
 const RecommendationsPanel = () => {
   const items = [
-    {
-      title: 'Mentorship: Pair with Senior Manager (People Ops)',
-      impact: 'High',
-      urgency: 'Immediate',
-      tag: 'Mentorship',
-    },
-    {
-      title: 'NPTEL: Organizational Leadership Course',
-      impact: 'Medium',
-      urgency: 'This week',
-      tag: 'Govt Training',
-    },
-    {
-      title: 'Job Rotation: 4-week Project in Strategy',
-      impact: 'High',
-      urgency: 'Plan',
-      tag: 'Rotation',
-    },
+    { title: 'Mentorship: Pair with Senior Manager (People Ops)', impact: 'High', urgency: 'Immediate', tag: 'Mentorship' },
+    { title: 'NPTEL: Organizational Leadership Course', impact: 'Medium', urgency: 'This week', tag: 'Govt Training' },
+    { title: 'Job Rotation: 4-week Project in Strategy', impact: 'High', urgency: 'Plan', tag: 'Rotation' },
   ];
 
   return (
@@ -130,10 +127,7 @@ const ProgressTile = ({ label, value }) => {
     <div className="bg-white rounded-xl p-4 border border-black/5">
       <div className="text-sm font-medium text-black mb-2">{label}</div>
       <div className="w-full h-2 rounded-full bg-black/10 overflow-hidden">
-        <div
-          className="h-2 rounded-full bg-gradient-to-r from-[#70587C] to-[#C88BDB]"
-          style={{ width: `${value}%` }}
-        />
+        <div className="h-2 rounded-full bg-gradient-to-r from-[#70587C] to-[#C88BDB]" style={{ width: `${value}%` }} />
       </div>
       <div className="text-right text-xs text-black/60 mt-1">{value}%</div>
     </div>
